@@ -1,3 +1,4 @@
+import { themedPlanet } from '../themes/index.js'
 import * as THREE from 'three'
 import { atlasTexture, hasPart, kitReady, kitUsesVertexColors, part } from './kit.js'
 import { withCurve } from '../core/curve.js'
@@ -27,7 +28,7 @@ import { withCurve } from '../core/curve.js'
 
 const DRONES = { count: 3 }
 
-export const PLANETS = {
+const BASE_PLANETS = {
   moon: {
     id: 'moon',
     name: 'Luna',
@@ -528,6 +529,8 @@ export const PLANETS = {
     grade: { saturation: 1.15, warmth: 0.04 },
   },
 }
+
+export const PLANETS = Object.fromEntries(Object.entries(BASE_PLANETS).map(([id, planet]) => [id, themedPlanet(planet)]))
 
 /** Display order for the picker: home first, then outward, then the pretty ones. */
 export const PLANET_ORDER = ['moon', 'mars', 'terra', 'beach', 'ocean', 'jungle', 'desert', 'tundra', 'autumn', 'sakura', 'volcanic', 'sky']
