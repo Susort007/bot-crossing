@@ -14,8 +14,12 @@ import {
   scanThreads,
 } from './scan.mjs'
 
+import { codespacesHost } from './browser-preview.mjs'
+import { demoThreads, demoHarnesses } from './demo.mjs'
+
+const DEMO = process.env.BOT_CROSSING_DEMO === '1'
 const here = path.dirname(fileURLToPath(import.meta.url))
-const DATA_DIR = process.env.BOT_CROSSING_DATA || path.join(here, '..', 'data')
+const DATA_DIR = process.env.BOT_CROSSING_DATA || path.join(here, '..', 'data', ...(DEMO ? ['demo'] : []))
 const STATE_FILE = path.join(DATA_DIR, 'colony.json')
 
 const STATE_VERSION = 2
@@ -314,7 +318,10 @@ function send(res, status, body) {
   res.end(payload)
 }
 
+const PREVIEW_HOST = codespacesHost()
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1'])
+
+if (PREVIEW_HOST) LOCAL_HOSTS.add(PREVIEW_HOST)
 
 // The machine's own LAN addresses count as local too, so the colony can be
 // served to the home network with BOT_CROSSING_HOST set. Harmless when bound
@@ -370,6 +377,10 @@ function isLocalRequest(req) {
   if (!LOCAL_HOSTS.has(hostnameOf(req.headers.host))) return false
 
   const origin = req.headers.origin
+  if (hostnameOf(req.headers.host) === PREVIEW_HOST) {
+    if (origin) return origin === `https://${PREVIEW_HOST}`
+    return req.method === 'GET' || req.method === 'HEAD'
+  }
   if (origin && origin !== 'null') return LOCAL_HOSTS.has(hostnameOf(origin))
   return req.method === 'GET' || req.method === 'HEAD'
 }
@@ -409,15 +420,15 @@ export async function apiMiddleware(req, res, next) {
 
   try {
     if (url.pathname === '/api/threads' && req.method === 'GET') {
-      const threads = await reconcileArchived(await scanThreads())
+      const threads = await reconcileArchived(DEMO ? demoThreads() : await scanThreads())
       // A harness that is present but cannot read its own store says so here, rather than
       // appearing healthy in the list while quietly contributing nothing.
-      const warnings = (await harnessStatus()).filter((h) => h.detected && h.error).map((h) => h.error)
+      const warnings = (DEMO ? demoHarnesses : await harnessStatus()).filter((h) => h.detected && h.error).map((h) => h.error)
       return send(res, 200, { threads, scannedAt: Date.now(), warnings })
     }
 
     if (url.pathname === '/api/harnesses' && req.method === 'GET') {
-      return send(res, 200, { harnesses: await harnessStatus() })
+      return send(res, 200, { harnesses: DEMO ? demoHarnesses : await harnessStatus() })
     }
 
     if (url.pathname === '/api/state' && req.method === 'GET') {
@@ -449,6 +460,10 @@ export async function apiMiddleware(req, res, next) {
         if (base && current.updatedAt !== base) return send(res, 409, current)
         return send(res, 200, await writeState(body))
       })
+    }
+
+    if (DEMO && req.method === 'POST' && ['/api/open', '/api/new-session', '/api/reveal'].includes(url.pathname)) {
+      return send(res, 400, { error: 'Demo agents are simulated. Desktop actions are available in local integration mode.' })
     }
 
     if (url.pathname === '/api/open' && req.method === 'POST') {

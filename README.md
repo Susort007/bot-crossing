@@ -943,3 +943,47 @@ Everything in the repository today stays MIT; new designs, models and physical f
 do not. The code that draws the bots stays MIT either way — see [TRADEMARKS.md](TRADEMARKS.md).
 
 Not affiliated with Anthropic, OpenAI, Google, or any of the other harness vendors listed above.
+
+## Develop entirely in the browser
+
+This fork includes a Codespaces container with Node.js 24 and a simulated-agent mode.
+The existing local harness adapters remain available; no local session stores are required
+for the demo. Twelve simulated agents across three projects rotate through working, waiting,
+error, merged, idle and sleeping states every 20 seconds. The normal browser polling updates
+the colony. Demo thread cards identify their data as simulated; desktop actions return an
+explanation instead of launching a process. Layout, settings and archiving still work.
+
+1. On GitHub, open **Code → Codespaces → Create codespace on main** (or your development branch).
+   The container installs locked dependencies with `npm ci`.
+2. In the browser terminal, run `npm run dev:browser`.
+3. In the **Ports** tab, confirm port **5274** has **Private** visibility, then open it in the browser.
+   Keep it private: GitHub sign-in and Codespaces port access provide authentication. Never
+   change the port to Public or share access with someone who should not see the workspace.
+4. Make changes in the browser editor, run `npm test` and `npm run build`, then commit and push
+   your branch using Source Control and open a pull request on GitHub.
+   Codex Cloud can work on the same repository in a separate branch; push/merge those changes
+   and pull them into Codespaces. Running processes and files on the two machines are separate.
+
+`dev:browser` binds to all container interfaces so the private Codespaces proxy can reach it.
+Both Vite and the API allow the exact hostname built from `CODESPACE_NAME`, port 5274 and
+`GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`. No wildcard Codespaces hosts or forwarded-header
+trust is enabled. The API requires the exact HTTPS preview Origin for state-changing preview
+requests; foreign Hosts, missing Origins and cross-site Origins remain rejected. If you change
+the port, set `PORT` to the same number and update the container forwarding configuration.
+If preview requests get 403, check the Codespaces variables and restart the server; do not
+remove the Host or Origin checks. Outside Codespaces, use local access rather than exposing
+`dev:browser` on an untrusted network.
+
+Demo mode is explicitly enabled by `BOT_CROSSING_DEMO=1` (also the container default).
+Without `BOT_CROSSING_DATA`, its state lives in ignored `data/demo/colony.json`, separate from
+normal `data/colony.json`. An explicit `BOT_CROSSING_DATA` overrides either location.
+To use real integrations instead, stop the demo and run `BOT_CROSSING_DEMO=0 npm run dev`.
+Adapters read only session stores inside that machine; Codespaces cannot read your laptop's
+Codex or Claude files. Desktop deep links and terminals need a suitable local desktop and
+are not expected to launch on your laptop from a remote container.
+
+Validation: `npm test` exercises adapters, colony behavior, state persistence and security,
+including simulated data and preview Host/Origin rejection. `npm run build` produces `dist/`;
+the existing large-bundle warning is advisory. Check the browser for the rendered colony,
+agent activity, and layout persistence after reload. This setup does not require API keys,
+external databases, original art packs or optional audio samples.

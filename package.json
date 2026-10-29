@@ -37,7 +37,8 @@
     "start": "vite build && node server/serve.mjs",
     "serve": "node server/serve.mjs",
     "assets": "node tools/build-assets.mjs",
-    "test": "node --test \"test/**/*.test.mjs\""
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "dev:browser": "BOT_CROSSING_DEMO=1 vite --host 0.0.0.0 --port 5274 --strictPort"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
