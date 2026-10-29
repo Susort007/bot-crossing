@@ -55,6 +55,7 @@ const STAT_DEFS = [
   { key: 'waiting', label: 'need you', cls: 'waiting' },
   { key: 'blocked', label: 'blocked', cls: 'blocked' },
   { key: 'celebrating', label: 'shipped', cls: 'done' },
+  ...(THEME.idleBadge >= 0 ? [{ key: 'idle', label: 'Idle', cls: 'idle' }] : []),
   { key: 'agents', label: 'bots', cls: 'idle' },
 ]
 
@@ -1183,10 +1184,11 @@ const TEMPLATE = `
       </div>
     </div>
     <div style="margin-top:16px">
-      <div class="legend-row"><i class="badge" style="background:#1a2b46;color:#8fb4ee">?</i> waiting on your reply — click to open the thread</div>
-      <div class="legend-row"><i class="badge" style="background:#3d1c1c;color:#e88b8b">!</i> the session hit an error</div>
-      <div class="legend-row"><i class="badge" style="background:#16301f;color:#7fd39a">⚒</i> running right now, building</div>
-      <div class="legend-row"><i class="badge" style="background:#332b12;color:#e6c67f">✓</i> its pull request landed</div>
+      <div class="legend-row"><i class="badge" style="background:#1a2b46;color:var(--status-waiting)">?</i> waiting on your reply — click to open the thread</div>
+      <div class="legend-row"><i class="badge" style="background:#3d1c1c;color:var(--status-blocked)">!</i> the session hit an error</div>
+      <div class="legend-row"><i class="badge" style="background:#16301f;color:var(--status-working)">⚒</i> running right now, building</div>
+      <div class="legend-row"><i class="badge" style="background:#332b12;color:var(--status-celebrating)">✓</i> its pull request landed</div>
+      ${THEME.idleBadge >= 0 ? '<div class="legend-row"><i class="badge" style="background:#15233a;color:var(--status-idle)">Ⅱ</i> idle — available, no active work</div>' : ''}
       <div class="legend-row"><i class="badge" style="background:#1d1f2e;color:#a9a8c0">z</i> nothing for three days</div>
     </div>
     <div style="margin-top:18px;display:flex;justify-content:flex-end">

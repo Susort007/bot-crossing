@@ -1,3 +1,5 @@
+import { isAlarming, statusFor } from './session-status.js'
+export { statusFor } from './session-status.js'
 import { THEME } from '../themes/index.js'
 import { SceneryReflections } from '../world/reflections.js'
 import * as THREE from 'three'
@@ -51,7 +53,6 @@ import { liveThreadsForColony } from './hidden-projects.js'
  * you have running.
  */
 
-const STALE_MS = 3 * 24 * 60 * 60 * 1000
 /** How wide an astronaut is, for the purpose of not fitting through gaps it should not. */
 const AGENT_RADIUS = 0.26
 /**
@@ -80,31 +81,7 @@ export const STATUS_LABEL = {
 }
 
 /**
- * Whether an error still earns the `!`. `hasError` describes the last turn, so it is sticky by
- * nature: a thread that failed a month ago still says so, and the adapter is right to report it.
- * But as the first rule below it outranked the three-day sleep every other thread gets, so one
- * abandoned failure held its astronaut slumped and badged for as long as the thread existed, and
- * kept its whole repo from folding away with the other quiet ones. Opening it did not help:
- * viewing clears `unread`, not `hasError`.
- *
- * So an error goes quiet on the same clock as everything else. The flag is untouched, only the
- * alarm decays, and a thread that failed on Friday afternoon is still red on Monday morning.
- */
-const isAlarming = (thread, now = Date.now()) =>
-  Boolean(thread.hasError) && now - thread.lastActivityAt <= STALE_MS
-
-/** Thread → behaviour. First match wins, exactly like the board's auto-sort. */
-export function statusFor(thread, now = Date.now()) {
-  if (isAlarming(thread, now)) return 'blocked'
-  if (thread.running) return 'working'
-  if (thread.prState === 'MERGED') return 'celebrating'
-  if (thread.unread) return 'waiting'
-  if (now - thread.lastActivityAt > STALE_MS) return 'sleeping'
-  return 'idle'
-}
-
-/**
- * Which behaviours earn a badge. Dormant and idle deliberately get none: their pose and
+ * Which behaviours earn a badge. Dormant gets none; idle is theme-selectable. Their pose and
  * face already say it, and with most of a real thread list sitting quiet, a badge over
  * every one of them buries the single `?` that actually wants you.
  */

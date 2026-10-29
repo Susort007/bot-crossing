@@ -987,3 +987,45 @@ including simulated data and preview Host/Origin rejection. `npm run build` prod
 the existing large-bundle warning is advisory. Check the browser for the rendered colony,
 agent activity, and layout persistence after reload. This setup does not require API keys,
 external databases, original art packs or optional audio samples.
+
+## AI Colony visual themes
+
+The default presentation is now **AI Colony**, a dark cyberpunk treatment of the same
+Bot Crossing simulation. Repo districts have cyan, magenta, purple or electric blue
+perimeter lights and emissive building accents. Metallic service robots keep their existing
+movement, expressive screen faces, work animations and picking behavior.
+
+Open `/?theme=classic` to use the original palette and atmosphere, or `/?theme=cyberpunk`
+for AI Colony. Switching requires a page reload and preserves sessions, layout, settings and
+integration behavior. Unknown theme names fall back to cyberpunk. Existing saved time-of-day
+settings are respected; on a fresh browser the cyberpunk theme starts at blue hour. The
+lighting controls still work, including daytime, and status icons remain visible without bloom.
+
+| Session state | World indicator | HUD / robot light |
+| --- | --- | --- |
+| Working | Hammer icon and work animation | Cyan |
+| Waiting for input | Question mark | Amber |
+| Completed (merged PR) | Checkmark and celebration | Mint green |
+| Error | Alert icon and fault pose | Coral red |
+| Idle | Pause icon and idle movement | Silver blue |
+| Dormant | Sleeping pose, no urgent badge | Muted violet |
+
+The status text, distinct icon shapes and robot poses supplement color. Completion retains
+the original meaning (`prState === 'MERGED'`); this theme does not infer completion from an
+idle session. Errors still expire on the existing three-day clock. Hiding the HUD leaves
+world indicators available. HUD animation respects the browser's reduced-motion preference;
+existing simulation animation controls remain unchanged.
+
+Theme boundaries:
+
+- `src/themes/index.js`: named palettes, atmospheric presets, robot materials, badge colors,
+  labels and DOM tokens. `themedPlanet` preserves each world's shape, water and identity.
+- `src/themes/cyberpunk.css`: scoped HUD overrides; the base layout remains in `src/ui/styles.css`.
+- `src/game/session-status.js`: pure status precedence, independent of themes, renderers and
+  adapters. `colony.js` re-exports `statusFor` to preserve the existing import interface.
+- Renderers consume theme values. Server adapters, API contracts, demo generation and
+  Codespaces Host/Origin protections are unchanged by this visual work.
+
+To add another look, define another theme entry with all status colors and material tokens,
+then add its scoped CSS. Keep session classification in `session-status.js` and integrations
+under `server/harnesses/`. Theme choice is browser-local URL state, not a server setting.

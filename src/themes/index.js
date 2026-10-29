@@ -36,7 +36,7 @@ const cyberpunk = {
   badges: [[2.8, 1.8, 0.4], [3, 0.35, 0.5], [0.25, 2.1, 2.7], [0.5, 2.8, 1.1], [1.1, 1.3, 1.6], [0.65, 0.55, 0.95], [1.6, 0.7, 2.8], [0.7, 1, 1.5]],
   deck: { desaturate: -0.2, brightness: 0.32, metalness: 0.55 },
   idleBadge: 4,
-  labels: { waiting: 'Waiting for input', blocked: 'Error', celebrating: 'Completed' },
+  labels: { working: 'Working', idle: 'Idle', waiting: 'Waiting for input', blocked: 'Error', celebrating: 'Completed' },
   borderGlow: 0.85, windowGlow: 0.45, shell: 0x8194ae, metalness: 0.5,
   environment: {
     ground: { low: 0x11182c, high: 0x2a3654, tint: 0x415578 },
@@ -44,13 +44,13 @@ const cyberpunk = {
     sky: { top: 0x040817, bottom: 0x20143b },
     fog: { color: 0x12192f, near: 100, far: 235 },
     sun: { color: 0x91bfff, intensity: 1.7, night: 0.35 },
-    ambient: { sky: 0x789eff, ground: 0x5b337e, intensity: 1.15 },
+    ambient: { sky: 0x789eff, ground: 0x5b337e, intensity: 1.15, night: 0.65 },
     buildingTint: 0x546580,
     grade: { saturation: 1.05, warmth: -0.03 },
   },
 }
 export const THEMES = { classic, cyberpunk }
-export function themeFor(name) { return THEMES[name] || cyberpunk }
+export function themeFor(name) { return Object.hasOwn(THEMES, name) ? THEMES[name] : cyberpunk }
 // A URL selection is local to the browser and never changes API or integration settings.
 export const THEME = themeFor(typeof location === 'undefined' ? 'cyberpunk' : new URLSearchParams(location.search).get('theme'))
 export function themedPlanet(planet, theme = THEME) {

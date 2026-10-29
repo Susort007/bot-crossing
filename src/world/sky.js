@@ -477,7 +477,7 @@ export class Sky {
     // The hemisphere light drops right back when IBL is carrying the ambient — running both
     // at full strength double-counts the sky and flattens everything out.
     const hemiScale = this.settings.get('ibl') ? 0.55 : 1
-    this.hemi.intensity = THREE.MathUtils.lerp(planet.ambient.intensity * 0.22, planet.ambient.intensity, day) * hemiScale
+    this.hemi.intensity = THREE.MathUtils.lerp(planet.ambient.intensity * (planet.ambient.night ?? 0.22), planet.ambient.intensity, day) * hemiScale
     // Enough of a bounce that surfaces turned away from the sun read as dark rather than as
     // holes in the image. On an airless world this stands in for regolith bounce.
     this.fill.intensity = THREE.MathUtils.lerp(0.34, 0.26, day)
