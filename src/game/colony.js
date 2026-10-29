@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import { SceneryReflections } from '../world/reflections.js'
 import * as THREE from 'three'
 import { PLANETS, createTerrain, createScatter, terrainHeight } from '../world/planet.js'
@@ -112,7 +113,7 @@ const BADGE_FOR = {
   working: BADGE.working,
   celebrating: BADGE.done,
   sleeping: BADGE.none,
-  idle: BADGE.none,
+  idle: THEME.id === 'cyberpunk' ? BADGE.paused : BADGE.none,
   spawning: BADGE.spawning,
   leaving: BADGE.leaving,
 }

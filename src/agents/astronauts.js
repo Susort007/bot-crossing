@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import { reflectionUniforms, withLocalReflections } from '../world/reflections.js'
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
@@ -32,19 +33,8 @@ import { helmetGeometry, visorGeometry, screenGeometry } from './model.js'
  * character, including moving hands and feet.
  */
 
-const SUIT_TONES = [0xf3f1ec, 0xe8e4dc, 0xf7f4ee, 0xdfe4e8, 0xf1e9df]
-
-/** Trim + eye colour per behaviour. Eyes are pushed past 1.0 so the bloom pass catches them. */
-const AGENT_LOOK = {
-  working: { trim: 0x4f9a63, eye: [0.35, 2.5, 1.15] },
-  waiting: { trim: 0x4f7ec9, eye: [0.45, 1.5, 3.0] },
-  blocked: { trim: 0xc94f4f, eye: [3.0, 0.5, 0.45] },
-  celebrating: { trim: 0xc9a24f, eye: [2.9, 2.1, 0.6] },
-  idle: { trim: 0x8b8b85, eye: [1.1, 1.5, 1.7] },
-  sleeping: { trim: 0x5a5a70, eye: [0.7, 0.8, 1.4] },
-  spawning: { trim: 0xc96442, eye: [2.4, 1.4, 0.7] },
-  leaving: { trim: 0x6f7f75, eye: [1.0, 1.0, 1.1] },
-}
+const SUIT_TONES = THEME.suits
+const AGENT_LOOK = THEME.agents
 
 const WALK_SPEED = 2.1
 
@@ -193,7 +183,7 @@ export class Astronauts {
     // The suit is painted fabric-over-hardshell: fairly rough, not metallic, but glossy
     // enough on the helmet to catch a highlight off the environment map.
     const suit = (roughness, extra = {}) =>
-      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness, metalness: 0.04, ...extra })
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness, metalness: THEME.metalness, ...extra })
 
     // Everything worn is measured off the helmet, so the suit stays in proportion if the
     // rig is ever scaled again.
@@ -201,7 +191,7 @@ export class Astronauts {
 
     // Helmet shell.
     const helmetGeo = helmetGeometry(R)
-    parts.helmet = this._mesh(helmetGeo, suit(0.34, { vertexColors: true, metalness: 0.03, envMapIntensity: 0.9 }), capacity, false)
+    parts.helmet = this._mesh(helmetGeo, suit(0.34, { vertexColors: true, metalness: THEME.metalness, envMapIntensity: 0.9 }), capacity, false)
 
     // A clear protective window over a real opening. The opaque screen sits behind it;
     // the shell's inner wall naturally occludes the display as the viewing angle changes.
