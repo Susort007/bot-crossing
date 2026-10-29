@@ -15,6 +15,8 @@ const classic = {
   },
   badges: [[0.42, 1.35, 2.9], [2.9, 0.6, 0.5], [0.4, 1.9, 0.95], [1.5, 2.4, 0.8], [2.5, 1.9, 0.65], [0.9, 1, 1.7], [2.4, 1.4, 0.75], [1.2, 1.3, 1.35]],
   deck: { desaturate: -0.38, brightness: 0.9, metalness: 0.18 },
+  idleBadge: -1,
+  labels: {},
   borderGlow: 0.3, windowGlow: 0, shell: 0xf4f5f7, metalness: 0.04,
 }
 const cyberpunk = {
@@ -33,6 +35,8 @@ const cyberpunk = {
   },
   badges: [[2.8, 1.8, 0.4], [3, 0.35, 0.5], [0.25, 2.1, 2.7], [0.5, 2.8, 1.1], [1.1, 1.3, 1.6], [0.65, 0.55, 0.95], [1.6, 0.7, 2.8], [0.7, 1, 1.5]],
   deck: { desaturate: -0.2, brightness: 0.32, metalness: 0.55 },
+  idleBadge: 4,
+  labels: { waiting: 'Waiting for input', blocked: 'Error', celebrating: 'Completed' },
   borderGlow: 0.85, windowGlow: 0.45, shell: 0x8194ae, metalness: 0.5,
   environment: {
     ground: { low: 0x11182c, high: 0x2a3654, tint: 0x415578 },
@@ -51,4 +55,13 @@ export function themeFor(name) { return THEMES[name] || cyberpunk }
 export const THEME = themeFor(typeof location === 'undefined' ? 'cyberpunk' : new URLSearchParams(location.search).get('theme'))
 export function themedPlanet(planet, theme = THEME) {
   return theme.environment ? { ...planet, ...theme.environment } : planet
+}
+
+/** Install DOM tokens once, from the same status palette as robot lamps. */
+export function applyTheme(document, theme = THEME) {
+  document.documentElement.dataset.theme = theme.id
+  document.title = theme.name
+  for (const [status, look] of Object.entries(theme.agents)) {
+    document.documentElement.style.setProperty(`--status-${status}`, `#${look.trim.toString(16).padStart(6, '0')}`)
+  }
 }

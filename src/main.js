@@ -1,5 +1,7 @@
+import { THEME, applyTheme } from './themes/index.js'
 import * as THREE from 'three'
 import './ui/styles.css'
+import './themes/cyberpunk.css'
 import { DEFAULT_PRESET, Settings, hasStoredSettings } from './core/settings.js'
 import { Engine } from './core/engine.js'
 import { CameraRig } from './core/camera.js'
@@ -35,13 +37,15 @@ import { withErrands } from './game/errands.js'
  * can never silently drop an archive. Everything else is wiring.
  */
 
+applyTheme(document)
+
 const POLL_MS = 15000
 const app = document.getElementById('app')
 
 app.insertAdjacentHTML(
   'beforeend',
   `<div class="boot"><div class="inner">
-     <h1>Bot Crossing</h1>
+     <h1>${THEME.name}</h1>
      <p>Scanning for agent threads…</p>
      <div class="bar"><i></i></div>
    </div></div>`

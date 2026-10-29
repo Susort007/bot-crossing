@@ -76,6 +76,7 @@ export const STATUS_LABEL = {
   sleeping: 'Dormant',
   spawning: 'Arriving',
   leaving: 'Heading home',
+  ...THEME.labels,
 }
 
 /**
@@ -113,7 +114,7 @@ const BADGE_FOR = {
   working: BADGE.working,
   celebrating: BADGE.done,
   sleeping: BADGE.none,
-  idle: THEME.id === 'cyberpunk' ? BADGE.paused : BADGE.none,
+  idle: THEME.idleBadge,
   spawning: BADGE.spawning,
   leaving: BADGE.leaving,
 }

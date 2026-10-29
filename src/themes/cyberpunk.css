@@ -1,0 +1,50 @@
+/* Theme overrides only. Base layout, controls and interaction stay in ui/styles.css. */
+:root[data-theme='cyberpunk'] {
+  --bg: #060b18;
+  --panel: rgba(10, 18, 37, 0.94);
+  --panel-solid: #0d172c;
+  --line: rgba(105, 190, 235, 0.22);
+  --line-strong: rgba(105, 210, 255, 0.48);
+  --text: #edf6ff;
+  --muted: #a7bbd5;
+  --dim: #91a0bb;
+  --accent: #24e5ff;
+  --green: #64ffb0;
+  --blue: #448aff;
+  --amber: #ffcc66;
+  --red: #ff607a;
+  --teal: #24e5ff;
+  --radius: 8px;
+  --shadow: 0 14px 40px #020611b3, 0 0 18px #24e5ff0d;
+}
+[data-theme='cyberpunk'] .panel {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow), inset 0 1px 0 #24e5ff33;
+}
+[data-theme='cyberpunk'] .brand {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+[data-theme='cyberpunk'] .brandbar { border-bottom-color: #9d7bff66; }
+[data-theme='cyberpunk'] .btn:hover { border-color: var(--accent); }
+[data-theme='cyberpunk'] :focus-visible { outline: 2px solid #24e5ff; outline-offset: 3px; }
+[data-theme='cyberpunk'] .stat.working, [data-theme='cyberpunk'] .side .thread.working { color: var(--status-working); }
+[data-theme='cyberpunk'] .stat.waiting, [data-theme='cyberpunk'] .side .thread.waiting { color: var(--status-waiting); }
+[data-theme='cyberpunk'] .stat.blocked, [data-theme='cyberpunk'] .side .thread.blocked { color: var(--status-blocked); }
+[data-theme='cyberpunk'] .stat.done, [data-theme='cyberpunk'] .side .thread.done { color: var(--status-celebrating); }
+[data-theme='cyberpunk'] .stat.idle, [data-theme='cyberpunk'] .side .thread.idle { color: var(--status-idle); }
+/* Text and shapes carry status even with bloom off or impaired colour perception. */
+[data-theme='cyberpunk'] .stat .lbl { color: inherit; }
+[data-theme='cyberpunk'] .stat.working .pip { border-radius: 0; transform: rotate(45deg); }
+[data-theme='cyberpunk'] .stat.waiting .pip { background: transparent; border: 2px solid currentColor; }
+[data-theme='cyberpunk'] .stat.blocked .pip { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+[data-theme='cyberpunk'] .stat.idle .pip { border-radius: 0; background: linear-gradient(90deg, currentColor 35%, transparent 35%, transparent 65%, currentColor 65%); }
+@media (prefers-reduced-motion: reduce) {
+  [data-theme='cyberpunk'] *, [data-theme='cyberpunk'] *::before, [data-theme='cyberpunk'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
