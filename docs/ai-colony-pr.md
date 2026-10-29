@@ -30,6 +30,8 @@ status isolation and validation.
 - Headless Chromium with WebGL2/SwiftShader: cyberpunk and classic demo pages loaded with no
   browser or shader errors; both titles and theme selection checked. Cyberpunk HUD displayed
   working, waiting, error, completed and idle counts for 12 simulated sessions.
+- Chromium also rendered the demo with bloom disabled and at a 390px viewport: no browser
+  errors or horizontal page overflow.
 - No actual GitHub Codespaces authentication check in this runtime. SwiftShader checks do
   not measure real-device GPU performance or replace review on the target display.
 
