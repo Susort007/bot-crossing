@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import * as THREE from 'three'
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js'
 
@@ -59,7 +60,7 @@ export function helmetGeometry(R) {
   for (const side of [-1, 1]) {
     const ear = new THREE.LatheGeometry(earProfile, 32)
     ear.rotateZ(-side * Math.PI / 2); ear.translate(side * R, 0, -R * 0.06)
-    parts.push(colored(ear, 0xf4f5f7))
+    parts.push(colored(ear, THEME.shell))
   }
   return merge(parts)
 }

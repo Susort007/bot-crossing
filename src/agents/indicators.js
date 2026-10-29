@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import * as THREE from 'three'
 import { OVERLAY_LAYER } from '../core/engine.js'
 import { withCurve } from '../core/curve.js'
@@ -41,16 +42,7 @@ export const BADGE = {
 }
 
 /** HDR badge tint, tone-mapped with the scene after bloom and depth of field. */
-const BADGE_COLOR = {
-  0: [0.42, 1.35, 2.9],
-  1: [2.9, 0.6, 0.5],
-  2: [0.4, 1.9, 0.95],
-  3: [1.5, 2.4, 0.8],
-  4: [2.5, 1.9, 0.65],
-  5: [0.9, 1.0, 1.7],
-  6: [2.4, 1.4, 0.75],
-  7: [1.2, 1.3, 1.35],
-}
+const BADGE_COLOR = THEME.badges
 
 /**
  * How readily a badge gives up its space, 0 = never fades. Ranked by how much the thing it
