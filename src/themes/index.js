@@ -41,7 +41,7 @@ const cyberpunk = {
     fog: { color: 0x12192f, near: 100, far: 235 },
     sun: { color: 0x91bfff, intensity: 1.7, night: 0.35 },
     ambient: { sky: 0x789eff, ground: 0x5b337e, intensity: 1.15 },
-    buildingTint: 0x546580, buildingTintAmount: 0.8,
+    buildingTint: 0x546580,
     grade: { saturation: 1.05, warmth: -0.03 },
   },
 }

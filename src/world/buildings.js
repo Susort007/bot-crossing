@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { mulberry } from './planet.js'
@@ -394,7 +395,7 @@ function decorate(material, uniforms) {
          // Lamps and beacons, flagged per vertex when the recipe placed them.
          totalEmissiveRadiance += diffuseColor.rgb * vEmissive * ( 0.25 + uNight * 2.4 );
          // Window strips and trim come on after dark, in the repo's own colour.
-         totalEmissiveRadiance += uAccent * uCellAccent[ cell ] * uNight * 1.15;
+         totalEmissiveRadiance += uAccent * uCellAccent[ cell ] * ( uNight + ${THEME.windowGlow.toFixed(2)} ) * 1.15;
          // The construction line: a bright band riding just above the ground it rises from.
          float band = 1.0 - smoothstep( 0.0, 0.22, vLocalY - ground );
          totalEmissiveRadiance += uAccent * band * ( 1.0 - step( 0.999, uProgress ) ) * 1.5;`

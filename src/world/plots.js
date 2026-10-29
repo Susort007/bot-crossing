@@ -1,3 +1,4 @@
+import { THEME } from '../themes/index.js'
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { DECK_TEXTURE_SCALE, KERB_UV, deckSurface, kerbSurface } from './surfaces.js'
@@ -21,10 +22,7 @@ import { HEX_DIRS, SHIP_CELL, ORIGIN, POOL_RINGS, cellKey as key, hexDistance, i
  * repo lands where you are already looking and quiet ones ring the edge.
  */
 
-export const PLOT_PALETTE = [
-  0xc96442, 0x4f9a63, 0x4f7ec9, 0xb8942a, 0x8b5cc9, 0xc94f8b,
-  0x3fa8a0, 0xc97f4f, 0x6f8f4f, 0x5c7fc9, 0xc95c5c, 0x7f6fc9,
-]
+export const PLOT_PALETTE = THEME.districts
 
 /** Hex size, centre to corner. Cells tile exactly at this radius. */
 const CELL = 7.6
@@ -436,7 +434,7 @@ export class Plot {
     // rather than compete with them — but its rim faces sideways, so whatever the top reads
     // as in full sun the edge reads as one stop darker, and a backdrop that goes to nothing
     // at the plot boundary just looks like a hole.
-    const color = new THREE.Color(this.accent).offsetHSL(0, -0.38, 0).multiplyScalar(0.9)
+    const color = new THREE.Color(this.accent).offsetHSL(0, THEME.deck.desaturate, 0).multiplyScalar(THEME.deck.brightness)
     const plate = deckSurface()
     this.deck = new THREE.Mesh(
       geo,
@@ -447,7 +445,7 @@ export class Plot {
         roughnessMap: plate.roughnessMap,
         normalScale: new THREE.Vector2(0.7, 0.7),
         roughness: 0.82,
-        metalness: 0.18,
+        metalness: THEME.deck.metalness,
       })
     )
     this.deck.receiveShadow = true
@@ -656,7 +654,7 @@ export class Plot {
   setNight(night, urgent, elapsed) {
     if (this.borderMaterial) {
       this.borderMaterial.emissiveIntensity =
-        0.3 + night * 1.4 + (urgent ? 0.4 + Math.sin(elapsed * 3.4) * 0.32 : 0)
+        THEME.borderGlow + night * 1.4 + (urgent ? 0.4 + Math.sin(elapsed * 3.4) * 0.32 : 0)
     }
     this.lampMaterial.color.copy(this._lampBase).multiplyScalar(0.5 + night * 2.4)
   }
